@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOKO AFIYOGA - Pesan Sembako</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f8f3e9;
+  color:#4b3525;
+}
+header{
+  background:#5c3b27;
+  color:#fff5e6;
+  padding:25px 16px;
+  text-align:center;
+}
+header h1{margin:0;font-size:30px;letter-spacing:2px}
+header p{margin:8px 0 0;font-size:14px}
+.container{max-width:1000px;margin:auto;padding:20px}
+h2{font-size:22px;margin-top:10px}
+.categories{
+  display:flex;gap:8px;flex-wrap:wrap;margin:15px 0;
+}
+.categories button{
+  border:1px solid #c9ad91;
+  background:#fffaf2;
+  color:#5c3b27;
+  border-radius:20px;
+  padding:10px 15px;
+  cursor:pointer;
+}
+.categories button.active{
+  background:#5c3b27;color:white;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:15px;
+}
+.product{
+  background:white;
+  border:1px solid #eadbc9;
+  border-radius:12px;
+  padding:15px;
+}
+.product h3{margin:0 0 10px}
+.product select,.product input{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border:1px solid #d8c4ad;
+  border-radius:7px;
+  background:white;
+}
+.product button,.main-button{
+  width:100%;
+  background:#765034;
+  color:white;
+  border:0;
+  border-radius:8px;
+  padding:12px;
+  margin-top:8px;
+  cursor:pointer;
+}
+.price{font-weight:bold;color:#765034}
+.panel{
+  background:white;
+  border:1px solid #eadbc9;
+  border-radius:12px;
+  padding:18px;
+  margin-top:25px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid #eee;
+  padding:10px 0;
+}
+.cart-item button{
+  border:0;
+  background:#f1e2d2;
+  padding:5px 10px;
+  border-radius:5px;
+  cursor:pointer;
+}
+label{display:block;font-weight:bold;margin-top:14px}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #d8c4ad;
+  border-radius:8px;
+  margin-top:6px;
+  font:inherit;
+}
+textarea{resize:vertical}
+.total{
+  font-size:20px;
+  font-weight:bold;
+  margin-top:15px;
+}
+.note{font-size:13px;color:#806447;line-height:1.5}
+footer{
+  background:#5c3b27;
+  color:#fff5e6;
+  text-align:center;
+  padding:20px;
+  margin-top:30px;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>TOKO AFIYOGA</h1>
+  <p>Belanja sembako jadi lebih mudah</p>
+</header>
+
+<div class="container">
+
+  <h2>Daftar Sembako</h2>
+  <p class="note">
+    Pilih produk, tentukan varian dan jumlahnya, lalu masukkan ke keranjang.
+  </p>
+
+  <div class="categories" id="categories"></div>
+  <div class="products" id="products"></div>
+
+  <section class="panel">
+    <h2>Keranjang Belanja</h2>
+    <div id="cart"></div>
+    <div class="total" id="total">Total: Rp0</div>
+    <p class="note">
+      Harga dan ketersediaan barang akan dikonfirmasi oleh toko.
+      Biaya pengantaran belum termasuk total belanja.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Data Pemesanan</h2>
+
+    <form id="orderForm">
+
+      <label>Nama pemesan</label>
+      <input id="customerName" required placeholder="Masukkan nama lengkap">
+
+      <label>Nomor WhatsApp</label>
+      <input id="customerPhone" type="tel" required
+        placeholder="Contoh: 081234567890">
+
+      <label>Metode penerimaan pesanan</label>
+      <select id="deliveryMethod" required>
+        <option value="">Pilih metode</option>
+        <option value="Ambil sendiri">Ambil sendiri di toko</option>
+        <option value="Diantar">Diantar ke alamat</option>
+      </select>
+
+      <div id="addressArea" style="display:none">
+        <label>Alamat pengantaran</label>
+        <textarea id="customerAddress" rows="3"
+          placeholder="Masukkan alamat lengkap"></textarea>
+      </div>
+
+      <label>Tanggal pemesanan</label>
+      <input id="orderDate" type="date" required>
+
+      <label>Catatan tambahan (opsional)</label>
+      <textarea id="notes" rows="3"
+        placeholder="Contoh: pesanannya ditaruh di depan rumah"></textarea>
+
+      <button class="main-button" type="submit">
+        Buat Struk dan Kirim ke WhatsApp
+      </button>
+
+    </form>
+  </section>
+
+</div>
+
+<footer>
+  TOKO AFIYOGA<br>
+  Depan Masjid Baitul Manan, Ds. Banowan, RT 13/RW 03,
+  Kec. Sarang, Kab. Rembang
+</footer>
+
+<script>
+const WHATSAPP = "6281216854585";
+
+/*
+  CATATAN:
+  Harga produk di bawah masih 0 karena harga asli belum diberikan.
+  Ganti angka 0 dengan harga jual toko sebelum website dipublikasikan.
+*/
+
+const products = [
+  {
+    name:"Mi instan",
+    category:"Mi dan Makanan",
+    variants:["Indomie Goreng","Indomie Kuah","Mie Sedaap Goreng","Mie Sedaap Kuah"],
+    price:0
+  },
+  {
+    name:"Beras",
+    category:"Bahan Pokok",
+    variants:["Beras 1 kg","Beras 5 kg","Beras 10 kg","Beras 25 kg"],
+    price:0
+  },
+  {
+    name:"Minyak goreng",
+    category:"Bahan Pokok",
+    variants:["Minyak 500 ml","Minyak 1 liter","Minyak 2 liter"],
+    price:0
+  },
+  {
+    name:"Gula",
+    category:"Bahan Pokok",
+    variants:["Gula 250 gram","Gula 500 gram","Gula 1 kg"],
+    price:0
+  },
+  {
+    name:"Telur",
+    category:"Bahan Pokok",
+    variants:["Telur 1/4 kg","Telur 1/2 kg","Telur 1 kg"],
+    price:0
+  },
+  {
+    name:"Kopi",
+    category:"Minuman",
+    variants:["Kopi sachet","Kopi bubuk","Kopi kemasan"],
+    price:0
+  },
+  {
+    name:"Tepung",
+    category:"Bahan Pokok",
+    variants:["Tepung terigu 500 gram","Tepung terigu 1 kg","Tepung tapioka"],
+    price:0
+  },
+  {
+    name:"Sampo",
+    category:"Perlengkapan",
+    variants:["Sampo sachet","Sampo botol kecil","Sampo botol besar"],
+    price:0
+  },
+  {
+    name:"Sabun",
+    category:"Perlengkapan",
+    variants:["Sabun batang","Sabun cair","Sabun sachet"],
+    price:0
+  },
+  {
+    name:"Alat tulis",
+    category:"Perlengkapan",
+    variants:["Pensil","Pulpen","Buku tulis"],
+    price:0
+  },
+  {
+    name:"Kemiri",
+    category:"Bumbu Dapur",
+    variants:["Kemiri 100 gram","Kemiri 250 gram","Kemiri 500 gram"],
+    price:0
+  },
+  {
+    name:"Bawang putih",
+    category:"Bumbu Dapur",
+    variants:["Bawang putih 1/4 kg","Bawang putih 1/2 kg","Bawang putih 1 kg"],
+    price:0
+  },
+  {
+    name:"Bawang merah",
+    category:"Bumbu Dapur",
+    variants:["Bawang merah 1/4 kg","Bawang merah 1/2 kg","Bawang merah 1 kg"],
+    price:0
+  },
+  {
+    name:"Kacang tanah",
+    category:"Bumbu Dapur",
+    variants:["Kacang tanah 250 gram","Kacang tanah 500 gram","Kacang tanah 1 kg"],
+    price:0
+  },
+  {
+    name:"Kerupuk mentah",
+    category:"Mi dan Makanan",
+    variants:["Kerupuk mentah 250 gram","Kerupuk mentah 500 gram","Kerupuk mentah 1 kg"],
+    price:0
+  },
+  {
+    name:"Mi kuning",
+    category:"Mi dan Makanan",
+    variants:["Mi kuning 250 gram","Mi kuning 500 gram","Mi kuning 1 kg"],
+    price:0
+  }
+];
+
+let cart = [];
+let selectedCategory = "Semua";
+
+const rupiah = number =>
+  new Intl.NumberFormat("id-ID",{
+    style:"currency",
+    currency:"IDR",
+    maximumFractionDigits:0
+  }).format(number);
+
+function renderCategories(){
+  const categories = ["Semua",...new Set(products.map(p=>p.category))];
+
+  document.getElementById("categories").innerHTML =
+    categories.map(category=>`
+      <button class="${category===selectedCategory?'active':''}"
+        onclick="filterCategory('${category}')">
+        ${category}
+      </button>
+    `).join("");
+}
+
+function filterCategory(category){
+  selectedCategory = category;
+  renderCategories();
+  renderProducts();
+}
+
+function renderProducts(){
+  const filtered = selectedCategory==="Semua"
+    ? products
+    : products.filter(p=>p.category===selectedCategory);
+
+  document.getElementById("products").innerHTML =
+    filtered.map((product,index)=>{
+      const productIndex = products.indexOf(product);
+
+      return `
+        <div class="product">
+          <h3>${product.name}</h3>
+
+          <select id="variant${productIndex}">
+            ${product.variants.map(variant=>
+              `<option value="${variant}">${variant}</option>`
+            ).join("")}
+          </select>
+
+          <p class="price">
+            ${product.price>0?rupiah(product.price):"Harga dikonfirmasi toko"}
+          </p>
+
+          <input type="number" min="1" value="1"
+            id="qty${productIndex}" aria-label="Jumlah">
+
+          <button onclick="addToCart(${productIndex})">
+            Tambah ke Keranjang
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function addToCart(index){
+  const product = products[index];
+  const variant = document.getElementById("variant"+index).value;
+  const qty = Number(document.getElementById("qty"+index).value);
+
+  if(!Number.isInteger(qty)||qty<1){
+    alert("Masukkan jumlah barang yang benar.");
+    return;
+  }
+
+  const existing = cart.find(item=>
+    item.name===product.name && item.variant===variant
+  );
+
+  if(existing){
+    existing.qty += qty;
+  }else{
+    cart.push({
+      name:product.name,
+      variant:variant,
+      price:product.price,
+      qty:qty
+    });
+  }
+
+  renderCart();
+}
+
+function renderCart(){
+  const cartArea = document.getElementById("cart");
+
+  if(cart.length===0){
+    cartArea.innerHTML="<p>Keranjang masih kosong.</p>";
+  }else{
+    cartArea.innerHTML=cart.map((item,index)=>`
+      <div class="cart-item">
+        <div>
+          <strong>${item.name}</strong><br>
+          <small>${item.variant}</small><br>
+          <small>${item.qty} × ${rupiah(item.price)}</small>
+        </div>
+        <div>
+          <button onclick="changeQty(${index},-1)">−</button>
+          <button onclick="changeQty(${index},1)">+</button>
+          <button onclick="removeItem(${index})">Hapus</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  const total = cart.reduce((sum,item)=>
+    sum+(item.price*item.qty),0
+  );
+
+  document.getElementById("total").textContent =
+    "Total: "+rupiah(total);
+}
+
+function changeQty(index,amount){
+  cart[index].qty += amount;
+
+  if(cart[index].qty<1){
+    cart.splice(index,1);
+  }
+
+  renderCart();
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+document.getElementById("deliveryMethod").addEventListener("change",function(){
+  const isDelivery = this.value==="Diantar";
+
+  document.getElementById("addressArea").style.display =
+    isDelivery?"block":"none";
+
+  document.getElementById("customerAddress").required = isDelivery;
+});
+
+const dateInput = document.getElementById("orderDate");
+const today = new Date();
+const localToday = new Date(
+  today.getTime()-today.getTimezoneOffset()*60000
+).toISOString().split("T")[0];
+
+dateInput.min = localToday;
+dateInput.value = localToday;
+
+document.getElementById("orderForm").addEventListener("submit",function(event){
+  event.preventDefault();
+
+  if(cart.length===0){
+    alert("Keranjang masih kosong. Silakan pilih barang terlebih dahulu.");
+    return;
+  }
+
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const method = document.getElementById("deliveryMethod").value;
+  const address = document.getElementById("customerAddress").value.trim();
+  const date = document.getElementById("orderDate").value;
+  const notes = document.getElementById("notes").value.trim();
+
+  const total = cart.reduce((sum,item)=>
+    sum+(item.price*item.qty),0
+  );
+
+  const items = cart.map((item,index)=>
+    `${index+1}. ${item.name} - ${item.variant}\n`+
+    `   Jumlah: ${item.qty}\n`+
+    `   Harga: ${item.price>0?rupiah(item.price):"Konfirmasi toko"}\n`+
+    `   Subtotal: ${item.price>0?rupiah(item.price*item.qty):"Konfirmasi toko"}`
+  ).join("\n\n");
+
+  const receipt =
+`STRUK PEMESANAN TOKO AFIYOGA
+================================
+Nama: ${name}
+Nomor WhatsApp: ${phone}
+Tanggal pesanan: ${date}
+Metode: ${method}
+${method==="Diantar"?"Alamat: "+address:""}
+================================
+DAFTAR PESANAN
+${items}
+================================
+Total barang: ${rupiah(total)}
+Biaya pengantaran: ${method==="Diantar"?"Dikonfirmasi toko":"Rp0"}
+Total akhir: ${method==="Diantar"?"Dikonfirmasi toko":rupiah(total)}
+================================
+Catatan: ${notes||"-"}
+
+Alamat toko:
+Depan Masjid Baitul Manan,
+Ds. Banowan, RT 13/RW 03,
+Kec. Sarang, Kab. Rembang
+
+Mohon konfirmasi pesanan dan harga.
+Terima kasih sudah berbelanja di TOKO AFIYOGA.`;
+
+  const whatsappURL =
+    "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(receipt);
+
+  window.open(whatsappURL,"_blank");
+});
+
+renderCategories();
+renderProducts();
+renderCart();
+</script>
+
+</body>
+</html>
