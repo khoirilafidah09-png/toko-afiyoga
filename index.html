@@ -3,626 +3,406 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOKO AFIYOGA | Belanja Kebutuhan Harian</title>
+  <title>TOKO AFIYOGA</title>
+
   <style>
     :root {
-      --cream: #fbf7ef;
-      --paper: #fffdf8;
-      --brown: #65452f;
-      --brown-dark: #3f2a1c;
-      --tan: #e9d8c3;
-      --muted: #806f60;
-      --green: #476b48;
-      --border: #eadfce;
+      --cokelat: #76513b;
+      --cokelat-tua: #4f3526;
+      --krem: #f8f1e7;
+      --putih: #fffdf9;
+      --teks: #3d3028;
+      --hijau: #287b4b;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--brown-dark);
-      background: var(--cream);
+      font-family: Arial, sans-serif;
+      background: var(--krem);
+      color: var(--teks);
     }
-    button, input, select, textarea { font: inherit; }
-    button { cursor: pointer; }
-    .container { width: min(1100px, 92%); margin: auto; }
 
     header {
-      background: var(--paper);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 5;
+      background: var(--cokelat);
+      color: white;
+      padding: 28px 16px;
+      text-align: center;
     }
-    .nav {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .brand { font-weight: 800; color: var(--brown); font-size: 20px; }
-    .brand small {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .cart-button, .primary, .secondary {
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-weight: 700;
-    }
-    .cart-button, .primary { background: var(--brown); color: white; }
-    .secondary { background: var(--tan); color: var(--brown-dark); }
 
-    .hero {
-      padding: 48px 0 34px;
-      background: linear-gradient(120deg, #f1e4d2, #fbf7ef 75%);
+    header h1 {
+      margin: 0 0 8px;
+      letter-spacing: 1px;
     }
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 24px;
-      align-items: center;
-    }
-    .eyebrow {
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.1; margin: 12px 0; }
-    .hero p { color: var(--muted); line-height: 1.7; max-width: 580px; }
-    .hero-card {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 10px 30px #65452f0d;
-    }
-    .hero-card strong { display: block; margin-bottom: 8px; }
-    .hero-card p { margin: 0; font-size: 14px; }
 
-    main { padding: 32px 0 56px; }
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-    h2 { margin: 0; font-size: 25px; }
-    .muted { color: var(--muted); font-size: 14px; line-height: 1.6; }
-
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-    .toolbar input, .toolbar select, .field input, .field select, .field textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--brown-dark);
-      border-radius: 11px;
-      padding: 12px;
-      outline-color: var(--brown);
-    }
-    .search { flex: 1 1 220px; }
-    .filter { flex: 0 1 200px; }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .product {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .product-icon {
-      width: 52px;
-      height: 52px;
-      display: grid;
-      place-items: center;
-      background: #f3e8d9;
-      border-radius: 15px;
-      font-size: 27px;
-    }
-    .product h3 { margin: 0; font-size: 17px; }
-    .product .muted { margin: 0; }
-    .product .primary { width: 100%; margin-top: auto; }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 34px;
-    }
-    .info-card {
-      background: var(--paper);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-    }
-    .info-card strong { display: block; margin-bottom: 8px; }
-
-    .cart-panel {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: none;
-      background: #24180f77;
-      padding: 16px;
-      overflow-y: auto;
-    }
-    .cart-panel.open { display: grid; place-items: center; }
-    .cart-box {
-      width: min(600px, 100%);
-      max-height: 92vh;
-      overflow-y: auto;
-      background: var(--paper);
-      border-radius: 20px;
-      padding: 22px;
-    }
-    .cart-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .close {
-      border: 0;
-      background: var(--tan);
-      border-radius: 10px;
-      padding: 8px 12px;
-    }
-    .cart-list { margin: 18px 0; }
-    .cart-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-      padding: 13px 0;
-    }
-    .cart-item strong { display: block; }
-    .cart-item small { color: var(--muted); }
-    .quantity {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .quantity button {
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 8px;
-      width: 30px;
-      height: 30px;
-    }
-    .remove {
-      border: 0;
-      background: transparent;
-      color: #a33b2d;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-    .field { margin: 12px 0; }
-    .field label {
-      display: block;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
-    .field textarea { min-height: 75px; resize: vertical; }
-    .full { width: 100%; }
-    .notice {
-      background: #f5eadb;
-      color: var(--brown);
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 13px;
+    header p {
+      margin: 0;
       line-height: 1.5;
-      margin: 14px 0;
     }
-    .total-row {
+
+    main {
+      width: min(1100px, 92%);
+      margin: 24px auto;
+    }
+
+    h2 {
+      color: var(--cokelat-tua);
+    }
+
+    .info {
+      background: var(--putih);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .product {
+      background: var(--putih);
+      border: 1px solid #e7d9ca;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .product h3 {
+      margin: 0 0 12px;
+      color: var(--cokelat-tua);
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin: 10px 0 6px;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #d6c4b2;
+      border-radius: 8px;
+      background: white;
+      font: inherit;
+    }
+
+    .add-button,
+    .send-button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-button {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--cokelat);
+      color: white;
+    }
+
+    .add-button:hover {
+      background: var(--cokelat-tua);
+    }
+
+    .cart,
+    .order-form {
+      background: var(--putih);
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 24px;
+    }
+
+    .cart-item {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      font-weight: 800;
-      border-top: 1px solid var(--border);
-      padding-top: 14px;
-      margin-top: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eadfd4;
     }
-    footer {
-      background: var(--brown-dark);
-      color: #f8eee1;
-      padding: 28px 0;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-    footer p { margin: 5px 0; }
 
-    @media (max-width: 760px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .info-grid { grid-template-columns: 1fr; }
+    .cart-item button {
+      border: 0;
+      background: #f1dfd4;
+      color: #7b2f20;
+      padding: 6px 9px;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    @media (max-width: 480px) {
-      .product-grid { grid-template-columns: 1fr; }
-      .hero { padding-top: 32px; }
-      .section-heading { align-items: start; flex-direction: column; }
-      .cart-button { padding: 10px 12px; }
+
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 16px;
+    }
+
+    .send-button {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--hijau);
+      color: white;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #6b5a4d;
+      line-height: 1.5;
+    }
+
+    footer {
+      background: var(--cokelat-tua);
+      color: white;
+      text-align: center;
+      padding: 18px;
+      margin-top: 32px;
+      line-height: 1.5;
     }
   </style>
 </head>
+
 <body>
   <header>
-    <div class="container nav">
-      <div class="brand">
-        TOKO AFIYOGA
-        <small>KEBUTUHAN HARIAN</small>
-      </div>
-      <button class="cart-button" onclick="openCart()">
-        Keranjang <span id="cartCount">0</span>
-      </button>
-    </div>
+    <h1>TOKO AFIYOGA</h1>
+    <p>Belanja kebutuhan sehari-hari jadi lebih mudah</p>
   </header>
 
-  <section class="hero">
-    <div class="container hero-inner">
-      <div>
-        <div class="eyebrow">Belanja praktis dari rumah</div>
-        <h1>Kebutuhan harian,<br>lebih mudah.</h1>
-        <p>
-          Pilih barang, tentukan nominal harga yang sudah dikonfirmasi toko,
-          lalu masukkan ke keranjang. Pesanan dikirim melalui WhatsApp.
-        </p>
-        <button class="primary" onclick="document.getElementById('produk').scrollIntoView({behavior:'smooth'})">
-          Lihat Produk
-        </button>
-      </div>
-      <div class="hero-card">
-        <strong>Selamat datang di TOKO AFIYOGA</strong>
-        <p>Pesan kebutuhan sehari-hari dengan mudah. Tersedia ambil sendiri atau layanan antar dengan biaya tambahan.</p>
-      </div>
-    </div>
-  </section>
+  <main>
+    <section class="info">
+      <strong>Alamat Toko:</strong><br>
+      Depan Masjid Baitul Manan, Ds. Banowan, RT 13/RW 03,
+      Kec. Sarang, Kab. Rembang<br><br>
+      <strong>Layanan:</strong> Ambil di toko atau diantar
+      <br><span class="note">Biaya pengantaran dapat dikenakan biaya tambahan.</span>
+    </section>
 
-  <main class="container" id="produk">
-    <div class="section-heading">
-      <div>
-        <h2>Daftar Produk</h2>
-        <p class="muted">Pilih barang, nominal harga, dan jumlahnya.</p>
-      </div>
-    </div>
+    <h2>Daftar Produk</h2>
+    <p class="note">
+      Pilih nominal harga yang sudah disepakati dengan toko, lalu masukkan jumlah barang.
+    </p>
 
-    <div class="toolbar">
-      <div class="search">
-        <input id="searchInput" type="search" placeholder="Cari produk..." oninput="renderProducts()">
-      </div>
-      <div class="filter">
-        <select id="categoryFilter" onchange="renderProducts()">
-          <option value="Semua">Semua kategori</option>
-          <option value="Makanan">Makanan</option>
-          <option value="Bahan pokok">Bahan pokok</option>
-          <option value="Bumbu dapur">Bumbu dapur</option>
-          <option value="Kebutuhan rumah">Kebutuhan rumah</option>
-          <option value="Alat tulis">Alat tulis</option>
-        </select>
-      </div>
-    </div>
+    <section class="products" id="products"></section>
 
-    <div class="product-grid" id="productGrid"></div>
+    <section class="cart">
+      <h2>Keranjang Belanja</h2>
+      <div id="cartItems">Keranjang masih kosong.</div>
+      <div class="total">Total: <span id="totalPrice">Rp0</span></div>
+    </section>
 
-    <section class="info-grid">
-      <div class="info-card">
-        <strong>🛍️ Ambil sendiri</strong>
-        <p class="muted">Pesanan dapat diambil langsung di toko.</p>
+    <section class="order-form">
+      <h2>Data Pemesan</h2>
+
+      <label for="customerName">Nama pelanggan</label>
+      <input id="customerName" type="text" placeholder="Masukkan nama" required>
+
+      <label for="customerPhone">Nomor WhatsApp pelanggan</label>
+      <input id="customerPhone" type="tel" placeholder="Contoh: 081234567890" required>
+      <p class="note">
+        Nomor ini dicantumkan dalam pesan pesanan. Pesanan tetap dikirim ke nomor WhatsApp toko.
+      </p>
+
+      <label for="delivery">Metode penerimaan</label>
+      <select id="delivery">
+        <option value="Ambil di toko">Ambil di toko</option>
+        <option value="Diantar">Diantar</option>
+      </select>
+
+      <div id="addressWrap" style="display:none;">
+        <label for="customerAddress">Alamat pengantaran</label>
+        <textarea id="customerAddress" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
       </div>
-      <div class="info-card">
-        <strong>🛵 Layanan antar</strong>
-        <p class="muted">Tersedia layanan antar dengan biaya tambahan yang dikonfirmasi toko.</p>
-      </div>
-      <div class="info-card">
-        <strong>💬 Pesan via WhatsApp</strong>
-        <p class="muted">Toko akan mengonfirmasi pesanan sebelum diproses.</p>
-      </div>
+
+      <label for="orderNote">Catatan pesanan (opsional)</label>
+      <textarea id="orderNote" rows="3" placeholder="Contoh: titip di rumah"></textarea>
+
+      <button class="send-button" onclick="sendOrder()">Kirim Pesanan ke WhatsApp Toko</button>
     </section>
   </main>
 
-  <div class="cart-panel" id="cartPanel" onclick="closeCartOutside(event)">
-    <div class="cart-box">
-      <div class="cart-head">
-        <h2>Keranjang Pesanan</h2>
-        <button class="close" onclick="closeCart()">Tutup</button>
-      </div>
-
-      <div id="cartList" class="cart-list"></div>
-      <div class="total-row">
-        <span>Total barang</span>
-        <span id="cartTotal">Rp0</span>
-      </div>
-
-      <div class="notice">
-        Pastikan nominal harga yang dipilih sudah sesuai dengan harga dari toko.
-        Biaya antar, jika ada, dikonfirmasi secara terpisah.
-      </div>
-
-      <div class="field">
-        <label for="customerName">Nama pemesan</label>
-        <input id="customerName" placeholder="Masukkan nama">
-      </div>
-      <div class="field">
-        <label for="customerPhone">Nomor WhatsApp</label>
-        <input id="customerPhone" type="tel" placeholder="Nomor yang bisa dihubungi">
-      </div>
-      <div class="field">
-        <label for="deliveryMethod">Metode penerimaan</label>
-        <select id="deliveryMethod">
-          <option value="Ambil sendiri">Ambil sendiri</option>
-          <option value="Diantar">Diantar (biaya tambahan)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="customerAddress">Alamat (isi jika diantar)</label>
-        <textarea id="customerAddress" placeholder="Tulis alamat lengkap"></textarea>
-      </div>
-      <div class="field">
-        <label for="customerNote">Catatan tambahan</label>
-        <textarea id="customerNote" placeholder="Catatan tambahan"></textarea>
-      </div>
-
-      <button class="primary full" onclick="sendOrder()">Kirim Pesanan ke WhatsApp</button>
-    </div>
-  </div>
-
   <footer>
-    <div class="container">
-      <strong>TOKO AFIYOGA</strong>
-      <p>Depan Masjid Baitul Manan, Ds. Banowan, RT 13/RW 03, Kec. Sarang, Kab. Rembang.</p>
-      <p>Ambil sendiri dan layanan antar tersedia. Biaya antar dikonfirmasi oleh toko.</p>
-    </div>
+    <strong>TOKO AFIYOGA</strong><br>
+    Terima kasih sudah berbelanja!
   </footer>
 
   <script>
+    // Nomor WhatsApp tujuan pesanan toko.
+    // Gunakan format kode negara tanpa tanda + atau spasi.
+    const whatsappNumber = "6283170411956";
+
     const products = [
-      { id: 1, name: "Mi instan", category: "Makanan", icon: "🍜", variants: ["Goreng", "Kuah"] },
-      { id: 2, name: "Beras", category: "Bahan pokok", icon: "🍚", variants: ["Beras"] },
-      { id: 3, name: "Minyak goreng", category: "Bahan pokok", icon: "🫗", variants: ["Minyak goreng"] },
-      { id: 4, name: "Gula pasir", category: "Bahan pokok", icon: "🍬", variants: ["Gula pasir"] },
-      { id: 5, name: "Telur", category: "Bahan pokok", icon: "🥚", variants: ["Telur"] },
-      { id: 6, name: "Kopi", category: "Makanan", icon: "☕", variants: ["Kopi"] },
-      { id: 7, name: "Tepung", category: "Bahan pokok", icon: "🌾", variants: ["Tepung"] },
-      { id: 8, name: "Sampo", category: "Kebutuhan rumah", icon: "🧴", variants: ["Sampo"] },
-      { id: 9, name: "Sabun", category: "Kebutuhan rumah", icon: "🧼", variants: ["Sabun"] },
-      { id: 10, name: "Kemiri", category: "Bumbu dapur", icon: "🫘", variants: ["Kemiri"] },
-      { id: 11, name: "Bawang putih", category: "Bumbu dapur", icon: "🧄", variants: ["Bawang putih"] },
-      { id: 12, name: "Bawang merah", category: "Bumbu dapur", icon: "🧅", variants: ["Bawang merah"] },
-      { id: 13, name: "Kacang tanah", category: "Makanan", icon: "🥜", variants: ["Kacang tanah"] },
-      { id: 14, name: "Kerupuk mentah", category: "Makanan", icon: "🥠", variants: ["Kerupuk mentah"] },
-      { id: 15, name: "Mi kuning", category: "Makanan", icon: "🍝", variants: ["Mi kuning"] },
-      { id: 16, name: "Alat tulis", category: "Alat tulis", icon: "✏️", variants: ["Alat tulis"] }
+      "Mi instan",
+      "Beras",
+      "Minyak goreng",
+      "Gula",
+      "Telur",
+      "Kopi",
+      "Tepung",
+      "Mi kuning",
+      "Kerupuk mentah",
+      "Bawang putih",
+      "Bawang merah",
+      "Kemiri",
+      "Kacang tanah",
+      "Sabun mandi",
+      "Sampo",
+      "Alat tulis"
     ];
 
-    const cart = [];
     const priceOptions = [];
-
     for (let price = 500; price <= 300000; price += 500) {
       priceOptions.push(price);
     }
 
-    function formatRupiah(amount) {
+    const cart = [];
+
+    function formatRupiah(number) {
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
         maximumFractionDigits: 0
-      }).format(amount);
+      }).format(number);
     }
 
     function renderProducts() {
-      const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const category = document.getElementById("categoryFilter").value;
-      const grid = document.getElementById("productGrid");
+      const container = document.getElementById("products");
 
-      const filtered = products.filter(product => {
-        const matchesQuery = product.name.toLowerCase().includes(query);
-        const matchesCategory = category === "Semua" || product.category === category;
-        return matchesQuery && matchesCategory;
+      container.innerHTML = products.map((product, index) => {
+        const options = priceOptions.map(price =>
+          `<option value="${price}">${formatRupiah(price)}</option>`
+        ).join("");
+
+        return `
+          <article class="product">
+            <h3>${product}</h3>
+
+            <label for="price-${index}">Pilih nominal harga</label>
+            <select id="price-${index}">
+              ${options}
+            </select>
+
+            <label for="qty-${index}">Jumlah</label>
+            <input id="qty-${index}" type="number" min="1" value="1">
+
+            <button class="add-button" onclick="addToCart(${index})">
+              Tambahkan ke Keranjang
+            </button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function addToCart(index) {
+      const price = Number(document.getElementById(`price-${index}`).value);
+      const quantity = Number(document.getElementById(`qty-${index}`).value);
+
+      if (!Number.isFinite(quantity) || quantity < 1) {
+        alert("Masukkan jumlah barang minimal 1.");
+        return;
+      }
+
+      cart.push({
+        name: products[index],
+        price: price,
+        quantity: quantity
       });
 
-      if (!filtered.length) {
-        grid.innerHTML = '<div class="empty">Produk tidak ditemukan.</div>';
-        return;
-      }
-
-      grid.innerHTML = filtered.map(product => `
-        <article class="product">
-          <div class="product-icon">${product.icon}</div>
-          <div>
-            <h3>${escapeHTML(product.name)}</h3>
-            <p class="muted">${escapeHTML(product.category)}</p>
-          </div>
-
-          <div class="field" style="margin:0">
-            <label for="variant-${product.id}">Varian</label>
-            <select id="variant-${product.id}">
-              ${product.variants.map(variant =>
-                `<option value="${escapeHTML(variant)}">${escapeHTML(variant)}</option>`
-              ).join("")}
-            </select>
-          </div>
-
-          <div class="field" style="margin:0">
-            <label for="price-${product.id}">Pilih nominal harga</label>
-            <select id="price-${product.id}">
-              <option value="">Pilih harga</option>
-              ${priceOptions.map(price =>
-                `<option value="${price}">${formatRupiah(price)}</option>`
-              ).join("")}
-            </select>
-          </div>
-
-          <button class="primary" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
-        </article>
-      `).join("");
-    }
-
-    function addToCart(productId) {
-      const product = products.find(item => item.id === productId);
-      const variant = document.getElementById(`variant-${productId}`).value;
-      const priceValue = document.getElementById(`price-${productId}`).value;
-
-      if (!priceValue) {
-        alert("Pilih nominal harga terlebih dahulu.");
-        return;
-      }
-
-      const price = Number(priceValue);
-      const existing = cart.find(item =>
-        item.productId === productId &&
-        item.variant === variant &&
-        item.price === price
-      );
-
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({
-          productId,
-          name: product.name,
-          variant,
-          price,
-          qty: 1
-        });
-      }
-
-      updateCart();
-      openCart();
-    }
-
-    function updateCart() {
       renderCart();
-      document.getElementById("cartCount").textContent =
-        cart.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
     }
 
     function renderCart() {
-      const list = document.getElementById("cartList");
+      const container = document.getElementById("cartItems");
 
-      if (!cart.length) {
-        list.innerHTML = '<p class="muted">Keranjang masih kosong.</p>';
-        document.getElementById("cartTotal").textContent = formatRupiah(0);
+      if (cart.length === 0) {
+        container.innerHTML = "Keranjang masih kosong.";
+        document.getElementById("totalPrice").textContent = formatRupiah(0);
         return;
       }
 
-      list.innerHTML = cart.map((item, index) => `
+      container.innerHTML = cart.map((item, index) => `
         <div class="cart-item">
           <div>
-            <strong>${escapeHTML(item.name)}</strong>
-            <small>${escapeHTML(item.variant)} · ${formatRupiah(item.price)} per item</small>
-            <div class="quantity">
-              <button onclick="changeQty(${index}, -1)" aria-label="Kurangi">−</button>
-              <span>${item.qty}</span>
-              <button onclick="changeQty(${index}, 1)" aria-label="Tambah">+</button>
-            </div>
-            <small>Subtotal: ${formatRupiah(item.price * item.qty)}</small><br>
-            <button class="remove" onclick="removeItem(${index})">Hapus barang</button>
+            <strong>${item.name}</strong><br>
+            ${formatRupiah(item.price)} × ${item.quantity}
+            = ${formatRupiah(item.price * item.quantity)}
           </div>
+          <button onclick="removeFromCart(${index})">Hapus</button>
         </div>
       `).join("");
 
-      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-      document.getElementById("cartTotal").textContent = formatRupiah(total);
+      document.getElementById("totalPrice").textContent =
+        formatRupiah(getTotal());
     }
 
-    function changeQty(index, amount) {
-      cart[index].qty += amount;
-      if (cart[index].qty <= 0) cart.splice(index, 1);
-      updateCart();
+    function getTotal() {
+      return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     }
 
-    function removeItem(index) {
-      cart.splice(index, 1);
-      updateCart();
-    }
-
-    function openCart() {
-      document.getElementById("cartPanel").classList.add("open");
-      renderCart();
-    }
-
-    function closeCart() {
-      document.getElementById("cartPanel").classList.remove("open");
-    }
-
-    function closeCartOutside(event) {
-      if (event.target.id === "cartPanel") closeCart();
-    }
+    document.getElementById("delivery").addEventListener("change", function() {
+      const addressWrap = document.getElementById("addressWrap");
+      addressWrap.style.display = this.value === "Diantar" ? "block" : "none";
+    });
 
     function sendOrder() {
-      if (!cart.length) {
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const delivery = document.getElementById("delivery").value;
+      const address = document.getElementById("customerAddress").value.trim();
+      const note = document.getElementById("orderNote").value.trim();
+
+      if (cart.length === 0) {
         alert("Keranjang masih kosong. Tambahkan produk terlebih dahulu.");
         return;
       }
 
-      const name = document.getElementById("customerName").value.trim();
-      const phone = document.getElementById("customerPhone").value.trim();
-      const method = document.getElementById("deliveryMethod").value;
-      const address = document.getElementById("customerAddress").value.trim();
-      const note = document.getElementById("customerNote").value.trim();
-
       if (!name || !phone) {
-        alert("Mohon isi nama dan nomor WhatsApp terlebih dahulu.");
+        alert("Mohon isi nama dan nomor WhatsApp pelanggan.");
         return;
       }
 
-      if (method === "Diantar" && !address) {
+      if (delivery === "Diantar" && !address) {
         alert("Mohon isi alamat pengantaran.");
         return;
       }
 
       const orderLines = cart.map(item =>
-        `- ${item.name} (${item.variant}) x${item.qty} — ${formatRupiah(item.price)} per item — subtotal ${formatRupiah(item.price * item.qty)}`
+        `- ${item.name}: ${formatRupiah(item.price)} x ${item.quantity} = ${formatRupiah(item.price * item.quantity)}`
       ).join("\n");
 
-      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-
       const message =
-`Halo TOKO AFIYOGA, saya ingin memesan:
+`PESANAN TOKO AFIYOGA
 
+Nama: ${name}
+Nomor pelanggan: ${phone}
+Metode penerimaan: ${delivery}
+${delivery === "Diantar" ? "Alamat: " + address : ""}
+
+Daftar pesanan:
 ${orderLines}
 
-Total barang: ${formatRupiah(total)}
-Nama: ${name}
-Nomor WhatsApp: ${phone}
-Metode: ${method}
-${method === "Diantar" ? "Alamat: " + address : ""}
-Catatan: ${note || "-"}
+Total: ${formatRupiah(getTotal())}
+${note ? "Catatan: " + note : ""}
 
-Mohon konfirmasi pesanan dan biaya antar jika diantar. Terima kasih.`;
+Mohon konfirmasi pesanan ini. Terima kasih.`;
 
-      const whatsappNumber = "6283170411956";
-      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-    }
+      const whatsappUrl =
+        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-    function escapeHTML(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+      window.open(whatsappUrl, "_blank");
     }
 
     renderProducts();
